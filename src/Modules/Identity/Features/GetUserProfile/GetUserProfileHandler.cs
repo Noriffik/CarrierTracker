@@ -1,4 +1,5 @@
-﻿using CareerTracker.Identity.Dtos;
+﻿using CareerTracker.Identity.Domain;
+using CareerTracker.Identity.Dtos;
 using CareerTracker.Kernel;
 using Dapper;
 using MediatR;
@@ -9,11 +10,11 @@ namespace CareerTracker.Identity.Features.GetUserProfile;
 public sealed class GetUserProfileHandler : IRequestHandler<GetUserProfileQuery, Result<UserProfileDto>>
 {
     private readonly IDbConnection _db;
-    private const string Sql = """
-        SELECT Id, Email, Role, IsActive, CreatedAt
-        FROM Users
-        WHERE Id = @UserId AND IsActive = 1
-        """;
+    private const string Sql = @"
+        SELECT u.""Id"", u.""Email"", u.""Role"", u.""IsActive"", u.""CreatedAt""
+        FROM ""Users"" u
+        WHERE u.""Id"" = @UserId AND u.""IsActive"" = TRUE
+        ";
 
     public GetUserProfileHandler(IDbConnection db) => _db = db;
 
@@ -23,6 +24,6 @@ public sealed class GetUserProfileHandler : IRequestHandler<GetUserProfileQuery,
 
         return user is not null
             ? Result<UserProfileDto>.Success(user)
-            : Result<UserProfileDto>.Failure("Пользователь не найден или деактивирован");
+            : Result<UserProfileDto>.Failure(ValidationErrors.UserNotFound);
     }
 }

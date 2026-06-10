@@ -9,6 +9,7 @@ public sealed class User
     public string PasswordHash { get; private set; } = null!;
     public UserRole Role { get; private set; }
     public bool IsActive { get; private set; }
+    public bool IsDeleted { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
@@ -28,6 +29,7 @@ public sealed class User
             Email = email.ToLowerInvariant(),
             Role = role,
             IsActive = true,
+            IsDeleted = false,
             CreatedAt = DateTime.UtcNow,
             _timeProvider = timeProvider ?? new SystemTimeProvider()
         };
@@ -44,6 +46,22 @@ public sealed class User
 
     public void Deactivate()
     {
+        if(!IsActive) return;
+        IsActive = false;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void Activate()
+    {
+        if(IsActive) return;
+        IsActive = true;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void SoftDelete()
+    {
+        if (IsDeleted) return;
+        IsDeleted = true;
         IsActive = false;
         UpdatedAt = DateTime.UtcNow;
     }

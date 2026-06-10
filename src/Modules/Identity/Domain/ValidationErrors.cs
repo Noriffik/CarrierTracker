@@ -15,4 +15,8 @@ internal static class ValidationErrors
 
     // Password Reset
     public const string PasswordResetTokenInvalid = "Токен сброса недействителен или истек";
+
+    public const string UserNotFound = "Пользователь не найден или деактивирован";
+    public const string RoleAlreadyRevoked = "Пользователь уже с базовой ролью";
+    public const string CannotAssignAdminRole = "Yельзя назначить роль администратора через этот эндпоинт";
 }

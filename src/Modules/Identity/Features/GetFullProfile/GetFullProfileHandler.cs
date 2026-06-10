@@ -1,4 +1,5 @@
-﻿using CareerTracker.Kernel;
+﻿using CareerTracker.Identity.Domain;
+using CareerTracker.Kernel;
 using Dapper;
 using MediatR;
 using System.Data;
@@ -8,14 +9,21 @@ namespace CareerTracker.Identity.Features.GetFullProfile;
 public class GetFullProfileHandler : IRequestHandler<GetFullProfileQuery, Result<FullProfileDto>>
 {
     private readonly IDbConnection _db;
-    private const string Sql = """
+    private const string Sql = @"
         SELECT 
-            u.Id as UserId, u.Email, u.Role, u.CreatedAt as UserCreatedAt,
-            p.FirstName, p.LastName, p.PhoneNumber, p.City, p.Attributes, p.CreatedAt as ProfileCreatedAt
-        FROM Users u
-        LEFT JOIN UserProfiles p ON p.UserId = u.Id
-        WHERE u.Id = @UserId AND u.IsActive = 1
-        """;
+            u.""Id"" AS ""UserId"", 
+            u.""Email"" AS ""Email"", 
+            u.""Role"" AS ""Role"",
+            p.""FirstName"" AS ""FirstName"", 
+            p.""LastName"" AS ""LastName"", 
+            p.""PhoneNumber"" AS ""PhoneNumber"", 
+            p.""City"" AS ""City"",
+            p.""Attributes"" AS ""Attributes"", 
+            u.""CreatedAt"" AS ""CreatedAt""
+        FROM ""Users"" u 
+        LEFT JOIN ""UserProfiles"" p ON p.""UserId"" = u.""Id""
+        WHERE u.""Id"" = @UserId AND u.""IsActive"" = TRUE
+    ";
 
     public GetFullProfileHandler(IDbConnection db) => _db = db;
 
@@ -25,6 +33,6 @@ public class GetFullProfileHandler : IRequestHandler<GetFullProfileQuery, Result
 
         return result is not null
             ? Result<FullProfileDto>.Success(result)
-            : Result<FullProfileDto>.Failure("Профиль не найден");
+            : Result<FullProfileDto>.Failure(ValidationErrors.ProfileNotFound);
     }
 }

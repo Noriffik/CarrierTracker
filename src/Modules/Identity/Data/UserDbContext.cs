@@ -17,9 +17,13 @@ public sealed class UserDbContext : DbContext
         {
             b.HasKey(u => u.Id);
             b.Property(u => u.Email).HasMaxLength(256).IsRequired();
-            b.HasIndex(u => u.Email).IsUnique();
+            b.HasIndex(u => u.Email).IsUnique().HasFilter("\"IsActive\" = TRUE AND \"IsDeleted\" = FALSE");
             b.Property(u => u.PasswordHash).HasMaxLength(512).IsRequired();
-            b.Property(u => u.Role).HasConversion<string>(); // Храним как строку для читаемости
+            b.Property(u => u.Role).HasConversion<string>();
+            b.Property(u => u.IsDeleted).HasDefaultValue(false);
+
+            b.HasQueryFilter(u => !u.IsDeleted);
+
             b.ToTable("Users");
         });
 
@@ -28,7 +32,7 @@ public sealed class UserDbContext : DbContext
             b.HasKey(p => p.Id);
             b.HasOne<User>().WithMany().HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
 
-            // Ключевая настройка: храним Attributes как JSONB
+            // Храним Attributes как JSONB
             b.Property(p => p.Attributes)
                 .HasColumnType("jsonb")
                 .HasDefaultValueSql("'{}'::jsonb");

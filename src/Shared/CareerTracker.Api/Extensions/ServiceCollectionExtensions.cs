@@ -1,6 +1,10 @@
 ﻿using CareerTracker.Api.Middleware;
+using CareerTracker.Identity.Infrastructure;
 using CareerTracker.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace CareerTracker.Api.Extensions;
 
@@ -8,6 +12,43 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>();
+
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtSettings.Issuer,
+                ValidateAudience = true,
+                ValidAudience = jwtSettings.Audience,
+                ValidateLifetime = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+                ValidateIssuerSigningKey = true,
+
+                // ⚠️ ВАЖНО: Указываем, что роль хранится в claim-е с именем "role"
+                RoleClaimType = "role",
+                NameClaimType = "sub" // ID пользователя
+            };
+
+            // Опционально: логирование ошибок валидации токена (помогает при отладке 401)
+            options.Events = new JwtBearerEvents
+            {
+                OnAuthenticationFailed = context =>
+                {
+                    if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                    {
+                        context.Response.Headers.Append("Token-Expired", "true");
+                    }
+                    return Task.CompletedTask;
+                }
+            };
+        });
         // Инфраструктура (БД, Redis, RabbitMQ, Logging)
         services.AddInfrastructure(configuration);
 

@@ -1,10 +1,13 @@
-using CareerTracker.Api.Extensions;
+п»їusing CareerTracker.Api.Extensions;
+using CareerTracker.Identity.Data;
+using CareerTracker.Identity.Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Настройка Serilog
+// РќР°СЃС‚СЂРѕР№РєР° Serilog
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
@@ -20,21 +23,45 @@ builder.Services.AddSwaggerGen();
 
 var dbContextTypes = builder.Services
     .Where(descriptor =>
-        typeof(DbContext).IsAssignableFrom(descriptor.ServiceType) && // Является ли тип DbContext или его наследником
-        descriptor.ServiceType.IsClass &&                             // Это класс (не интерфейс)
-        !descriptor.ServiceType.IsAbstract)                           // Не абстрактный класс
+        typeof(DbContext).IsAssignableFrom(descriptor.ServiceType) && // РЇРІР»СЏРµС‚СЃСЏ Р»Рё С‚РёРї DbContext РёР»Рё РµРіРѕ РЅР°СЃР»РµРґРЅРёРєРѕРј
+        descriptor.ServiceType.IsClass &&                             // Р­С‚Рѕ РєР»Р°СЃСЃ (РЅРµ РёРЅС‚РµСЂС„РµР№СЃ)
+        !descriptor.ServiceType.IsAbstract)                           // РќРµ Р°Р±СЃС‚СЂР°РєС‚РЅС‹Р№ РєР»Р°СЃСЃ
     .Select(descriptor => descriptor.ServiceType)
-    .Distinct()                                                       // Убираем дубликаты, если тип зарегистрирован несколько раз
+    .Distinct()                                                       // РЈР±РёСЂР°РµРј РґСѓР±Р»РёРєР°С‚С‹, РµСЃР»Рё С‚РёРї Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ РЅРµСЃРєРѕР»СЊРєРѕ СЂР°Р·
     .ToList();
 
 var app = builder.Build();
 
-// 1. Применяем миграции БД (только если не в режиме строгой production-стабильности)
+// 1. РџСЂРёРјРµРЅСЏРµРј РјРёРіСЂР°С†РёРё Р‘Р” (С‚РѕР»СЊРєРѕ РµСЃР»Рё РЅРµ РІ СЂРµР¶РёРјРµ СЃС‚СЂРѕРіРѕР№ production-СЃС‚Р°Р±РёР»СЊРЅРѕСЃС‚Рё)
 if (app.Environment.IsDevelopment() || builder.Configuration.GetValue<bool>("ApplyMigrationsOnStart"))
 {
     await app.MigrateDatabasesAsync(dbContextTypes);
+
+    /*using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<UserDbContext>();
+        var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
+
+        var admin = await context.Users.FirstOrDefaultAsync(u => u.Email == "admin@careertracker.local");
+        if (admin != null)
+        {
+            // 1. Р“РµРЅРµСЂРёСЂСѓРµРј РќРђРЎРўРћРЇР©РР™, РІР°Р»РёРґРЅС‹Р№ С…СЌС€ РґР»СЏ РїР°СЂРѕР»СЏ "Admin123!"
+            var realHash = hasher.HashPassword(admin, "Admin123!");
+
+            Console.WriteLine("==================================================");
+            Console.WriteLine($"вњ… РќРђРЎРўРћРЇР©РР™ РҐР­РЁ РґР»СЏ РїР°СЂРѕР»СЏ 'Admin123!':");
+            Console.WriteLine(realHash);
+            Console.WriteLine("==================================================");
+
+            // 2. РћР±РЅРѕРІР»СЏРµРј Р·Р°РїРёСЃСЊ РІ Р‘Р”, С‡С‚РѕР±С‹ РёСЃРїСЂР°РІРёС‚СЊ РѕС€РёР±РєСѓ FormatException
+            admin.SetPasswordHash(realHash);
+            await context.SaveChangesAsync();
+
+            Console.WriteLine("вњ… Р‘Р°Р·Р° РґР°РЅРЅС‹С… СѓСЃРїРµС€РЅРѕ РѕР±РЅРѕРІР»РµРЅР° СЂРµР°Р»СЊРЅС‹Рј С…СЌС€РµРј!");
+        }
+    }*/
 }
 
-// 2. Настраиваем Middleware Pipeline
+// 2. РќР°СЃС‚СЂР°РёРІР°РµРј Middleware Pipeline
 app.ConfigurePipeline();
 await app.RunAsync();
