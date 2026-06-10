@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CareerTracker.Infrastructure.Auth;
+namespace CareerTracker.Identity.Infrastructure;
 
 public class JwtTokenService : IJwtTokenService
 {

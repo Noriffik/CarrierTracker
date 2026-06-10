@@ -13,8 +13,9 @@
     <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.27" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.27" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.17" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.8" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace CareerTracker.Infrastructure.Auth;
+﻿namespace CareerTracker.Identity.Infrastructure;
 
 public sealed class JwtSettings
 {

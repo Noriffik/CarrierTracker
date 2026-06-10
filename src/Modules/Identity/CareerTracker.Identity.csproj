@@ -13,12 +13,13 @@
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.27" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.16" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.27" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.17" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.8" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\CareerTracker.Infrastructure\CareerTracker.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Shared\CareerTracker.Kernel\CareerTracker.Kernel.csproj" />
   </ItemGroup>
 

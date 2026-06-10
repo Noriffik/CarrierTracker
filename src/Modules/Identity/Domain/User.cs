@@ -1,4 +1,6 @@
-﻿namespace CareerTracker.Identity.Domain;
+﻿using CareerTracker.Kernel.Common;
+
+namespace CareerTracker.Identity.Domain;
 
 public sealed class User
 {
@@ -8,10 +10,16 @@ public sealed class User
     public UserRole Role { get; private set; }
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public DateTime UpdatedAt { get; private set; }
+    public DateTime? UpdatedAt { get; private set; }
 
+    private ITimeProvider _timeProvider;
+
+    private User()
+    {
+        _timeProvider = null!;
+    }
     // Factory method для безопасного создания
-    public static User Create(string email, UserRole role)
+    public static User Create(string email, UserRole role, ITimeProvider? timeProvider = null)
     {
         if (string.IsNullOrWhiteSpace(email)) throw new ArgumentException("Email не может быть пустым");
 
@@ -20,11 +28,13 @@ public sealed class User
             Email = email.ToLowerInvariant(),
             Role = role,
             IsActive = true,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            _timeProvider = timeProvider ?? new SystemTimeProvider()
         };
     }
 
     public void SetPasswordHash(string hash) => PasswordHash = hash;
+
     public void ChangeRole(UserRole newRole)
     {
         if (Role == newRole) return;

@@ -7,6 +7,8 @@ namespace CareerTracker.Identity.Features.ResetPassword;
 
 public static class ResetPasswordEndpoint
 {
+    private const string SucessfullPasswordChange = "Пароль успешно изменен";
+
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("/password-reset/confirm", async (
@@ -16,7 +18,7 @@ public static class ResetPasswordEndpoint
         {
             var result = await mediator.Send(command, ct);
             return result.IsSuccess
-                ? Results.Ok(new { message = "Пароль успешно изменен" })
+                ? Results.Ok(new { message = SucessfullPasswordChange })
                 : Results.BadRequest(new { error = result.Error });
         })
         .WithName("ResetPassword")

@@ -9,7 +9,7 @@ public static class GetFullProfileEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/profile", async (
+        app.MapGet("/fullprofile", async (
             [AsParameters] GetFullProfileQuery query,
             ISender mediator,
             CancellationToken ct) =>

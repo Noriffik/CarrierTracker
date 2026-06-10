@@ -7,6 +7,8 @@ namespace CareerTracker.Identity.Features.RequestPasswordReset;
 
 public static class RequestPasswordResetEndpoint
 {
+    private const string IfAccountExistsSendEmail = "Если аккаунт существует, инструкция отправлена на email";
+
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("/password-reset/request", async (
@@ -16,7 +18,7 @@ public static class RequestPasswordResetEndpoint
         {
             _ = await mediator.Send(command, ct);
             // Всегда 200 OK — не даем информации о существовании аккаунта
-            return Results.Ok(new { message = "Если аккаунт существует, инструкция отправлена на email" });
+            return Results.Ok(new { message = IfAccountExistsSendEmail });
         })
         .WithName("RequestPasswordReset")
         .WithTags("Identity")

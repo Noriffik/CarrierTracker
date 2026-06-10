@@ -1,0 +1,11 @@
+﻿c:\Devs\PetProjects\CarrierTracker\WebApplication1\Controllers\WeatherForecastController.cs
+c:\Devs\PetProjects\CarrierTracker\WebApplication1\Program.cs
+c:\Devs\PetProjects\CarrierTracker\WebApplication1\WeatherForecast.cs
+c:\Devs\PetProjects\CarrierTracker\WebApplication1\obj\Debug\net8.0\WebApplication1.GlobalUsings.g.cs
+c:\Devs\PetProjects\CarrierTracker\WebApplication1\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+c:\Devs\PetProjects\CarrierTracker\WebApplication1\obj\Debug\net8.0\WebApplication1.AssemblyInfo.cs
+c:\Devs\PetProjects\CarrierTracker\WebApplication1\obj\Debug\net8.0\WebApplication1.MvcApplicationPartsAssemblyInfo.cs
+c:\Devs\PetProjects\CarrierTracker\WebApplication1\appsettings.Development.json
+c:\Devs\PetProjects\CarrierTracker\WebApplication1\appsettings.json
+c:\Devs\PetProjects\CarrierTracker\WebApplication1\WebApplication1.http
+c:\Devs\PetProjects\CarrierTracker\WebApplication1\Properties\launchSettings.json

@@ -10,12 +10,14 @@ public static class ServiceCollectionExtensions
     {
         // Инфраструктура (БД, Redis, RabbitMQ, Logging)
         services.AddInfrastructure(configuration);
-        services.AddCareerTrackerModules();
+
+        services.AddCareerTrackerModules(configuration);
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
 
         services.AddEndpointsApiExplorer();
+
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new() { Title = "Career Tracker API", Version = "v1" });

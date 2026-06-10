@@ -1,0 +1,5 @@
+﻿c:\Devs\PetProjects\CarrierTracker\src\Modules\CareerPath\CareerPathEndpointExtensions.cs
+c:\Devs\PetProjects\CarrierTracker\src\Modules\CareerPath\Features\CompleteLesson\CompleteLessonCommand.cs
+c:\Devs\PetProjects\CarrierTracker\src\Modules\CareerPath\Features\CompleteLesson\CompleteLessonEndpoint.cs
+c:\Devs\PetProjects\CarrierTracker\src\Modules\CareerPath\Features\CompleteLesson\CompleteLessonHandler.cs
+c:\Devs\PetProjects\CarrierTracker\src\Modules\CareerPath\Features\CompleteLesson\CompleteLessonValidator.cs

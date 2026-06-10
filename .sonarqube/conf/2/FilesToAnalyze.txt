@@ -1,0 +1,7 @@
+﻿c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Kernel\Common\ITimeProvider.cs
+c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Kernel\Common\SystemTimeProvider.cs
+c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Kernel\Result.cs
+c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Kernel\Services\IEmailSender.cs
+c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Kernel\Services\IJwtTokenService.cs
+c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Kernel\Services\IPasswordResetTokenGenerator.cs
+c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Kernel\TokenPair.cs

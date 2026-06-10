@@ -1,6 +1,9 @@
-﻿using CareerTracker.Infrastructure.Auth;
+﻿using CareerTracker.CareerPath;
+using CareerTracker.Identity;
+using CareerTracker.Infrastructure.Auth;
 using CareerTracker.Kernel.Services;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -10,17 +13,17 @@ namespace CareerTracker.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
-
-        services.AddSingleton<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IEmailSender, EmailSender>();
+        services.AddScoped<IPasswordResetTokenGenerator, PasswordResetTokenGenerator>();
+        services.AddIdentityModule(configuration);
+        services.AddCareerPathModule(configuration);
 
         return services;
     }
 
-    public static IServiceCollection AddCareerTrackerModules(this IServiceCollection services)
+    public static IServiceCollection AddCareerTrackerModules(this IServiceCollection services, IConfiguration configuration)
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies()
             .Where(a => a.FullName!.StartsWith("CareerTracker."))

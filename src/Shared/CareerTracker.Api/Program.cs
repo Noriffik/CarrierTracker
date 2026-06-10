@@ -1,4 +1,5 @@
 using CareerTracker.Api.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,12 +18,21 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var dbContextTypes = builder.Services
+    .Where(descriptor =>
+        typeof(DbContext).IsAssignableFrom(descriptor.ServiceType) && // Является ли тип DbContext или его наследником
+        descriptor.ServiceType.IsClass &&                             // Это класс (не интерфейс)
+        !descriptor.ServiceType.IsAbstract)                           // Не абстрактный класс
+    .Select(descriptor => descriptor.ServiceType)
+    .Distinct()                                                       // Убираем дубликаты, если тип зарегистрирован несколько раз
+    .ToList();
+
 var app = builder.Build();
 
 // 1. Применяем миграции БД (только если не в режиме строгой production-стабильности)
 if (app.Environment.IsDevelopment() || builder.Configuration.GetValue<bool>("ApplyMigrationsOnStart"))
 {
-    await app.ApplyDatabaseMigrationsAsync();
+    await app.MigrateDatabasesAsync(dbContextTypes);
 }
 
 // 2. Настраиваем Middleware Pipeline

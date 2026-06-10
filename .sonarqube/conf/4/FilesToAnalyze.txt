@@ -1,0 +1,4 @@
+﻿c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Infrastructure\Auth\JwtSettings.cs
+c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Infrastructure\Auth\JwtTokenService.cs
+c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Infrastructure\Auth\TokenHasher.cs
+c:\Devs\PetProjects\CarrierTracker\src\Shared\CareerTracker.Infrastructure\ServiceCollectionExtensions.cs

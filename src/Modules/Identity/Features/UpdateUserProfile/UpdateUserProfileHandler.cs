@@ -10,6 +10,11 @@ public class UpdateUserProfileHandler : IRequestHandler<UpdateUserProfileCommand
 {
     private readonly UserDbContext _context;
 
+    public UpdateUserProfileHandler(UserDbContext context)
+    {
+        _context = context;
+    }
+
     public async Task<Result> Handle(UpdateUserProfileCommand request, CancellationToken cancellationToken)
     {
         var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == request.UserId, cancellationToken);

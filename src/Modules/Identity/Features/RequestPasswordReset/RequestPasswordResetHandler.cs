@@ -1,6 +1,6 @@
 ﻿using CareerTracker.Identity.Data;
 using CareerTracker.Identity.Domain;
-using CareerTracker.Infrastructure.Auth;
+using CareerTracker.Identity.Infrastructure;
 using CareerTracker.Kernel;
 using CareerTracker.Kernel.Services;
 using MediatR;
@@ -14,6 +14,13 @@ public class RequestPasswordResetHandler : IRequestHandler<RequestPasswordResetC
     private readonly IEmailSender _emailSender;
     private readonly IPasswordResetTokenGenerator _tokenGenerator;
 
+    public RequestPasswordResetHandler(UserDbContext context, IEmailSender emailSender, IPasswordResetTokenGenerator tokenGenerator)
+    {
+        _context = context;
+        _emailSender = emailSender;
+        _tokenGenerator = tokenGenerator;
+    }
+
     public async Task<Result> Handle(RequestPasswordResetCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users.FirstOrDefaultAsync(
@@ -21,7 +28,7 @@ public class RequestPasswordResetHandler : IRequestHandler<RequestPasswordResetC
 
         if (user is not null && user.IsActive)
         {
-            var token = _tokenGenerator.Generate(user.Id);
+            var token = _tokenGenerator.Generate();
             var tokenHash = TokenHasher.Hash(token);
             var resetRequest = PasswordResetRequest.Create(user.Id, tokenHash, TimeSpan.FromHours(1));
 
