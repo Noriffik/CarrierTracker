@@ -62,20 +62,24 @@ public static class IdentityEndpointExtensions
     {
         var group = app.MapGroup("/api/identity")
                        .WithTags("Identity");
+        var adminGroup = app.MapGroup("/api/identity/admin")
+            .WithTags("Identity-Admin");
 
         // Регистрация эндпоинтов из слайсов
         RegisterUserEndpoint.MapEndpoint(group);
-        LoginEndpoint.MapEndpoint(group);
-        ActivateUserEndpoint.MapEndpoint(group);
-        DeactivateUserEndpoint.MapEndpoint(group);
-        DeleteUserEndpoint.MapEndpoint(group);
-        RevokeUserRoleEndpoint.MapEndpoint(group);
+        LoginEndpoint.MapEndpoint(group);        
         RequestPasswordResetEndpoint.MapEndpoint(group);
         ResetPasswordEndpoint.MapEndpoint(group);
         GetUserProfileEndpoint.MapEndpoint(group);
-        GetUsersListEndpoint.MapEndpoint(group);
         GetFullProfileEndpoint.MapEndpoint(group);
-        UpdateUserProfileEndpoint.MapEndpoint(group);
-        ChangeUserRoleEndpoint.MapEndpoint(group);
+        UpdateUserProfileEndpoint.MapEndpoint(group);        
+
+        // Админские эндпоинты
+        DeactivateUserEndpoint.MapEndpoint(adminGroup);
+        ActivateUserEndpoint.MapEndpoint(adminGroup);
+        DeleteUserEndpoint.MapEndpoint(adminGroup);
+        GetUsersListEndpoint.MapEndpoint(adminGroup);
+        ChangeUserRoleEndpoint.MapEndpoint(adminGroup);
+        RevokeUserRoleEndpoint.MapEndpoint(adminGroup);
     }
 }

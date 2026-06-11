@@ -4,6 +4,8 @@ using CareerTracker.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace CareerTracker.Api.Extensions;
@@ -30,10 +32,8 @@ public static class ServiceCollectionExtensions
                 ValidateLifetime = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
                 ValidateIssuerSigningKey = true,
-
-                // ⚠️ ВАЖНО: Указываем, что роль хранится в claim-е с именем "role"
-                RoleClaimType = "role",
-                NameClaimType = "sub" // ID пользователя
+                RoleClaimType = ClaimTypes.Role,
+                NameClaimType = JwtRegisteredClaimNames.Sub
             };
 
             // Опционально: логирование ошибок валидации токена (помогает при отладке 401)

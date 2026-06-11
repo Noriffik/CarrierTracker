@@ -10,23 +10,24 @@ public class GetUsersListHandler : IRequestHandler<GetUsersListQuery, Result<Pag
 {
     private readonly IDbConnection _db;
 
-    // 👈 Один запрос с динамической фильтрацией. Быстро и эффективно.
     private const string Sql = @"
-        WITH FilteredUsers AS (
-            SELECT ""Id"", ""Email"", ""Role"", ""IsActive"", ""IsDeleted"", ""CreatedAt""
-            FROM ""Users""
-            WHERE 
-                (@Status = 'All') OR
-                (@Status = 'Active' AND ""IsActive"" = TRUE AND ""IsDeleted"" = FALSE) OR
-                (@Status = 'Inactive' AND ""IsActive"" = FALSE AND ""IsDeleted"" = FALSE) OR
-                (@Status = 'Deleted' AND ""IsDeleted"" = TRUE)
-        )
         SELECT ""Id"", ""Email"", ""Role"", ""IsActive"", ""IsDeleted"", ""CreatedAt""
-        FROM FilteredUsers
+        FROM ""Users""
+        WHERE 
+            (@Status = 'All') OR
+            (@Status = 'Active' AND ""IsActive"" = TRUE AND ""IsDeleted"" = FALSE) OR
+            (@Status = 'Inactive' AND ""IsActive"" = FALSE AND ""IsDeleted"" = FALSE) OR
+            (@Status = 'Deleted' AND ""IsDeleted"" = TRUE)
         ORDER BY ""CreatedAt"" DESC
         OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY;
 
-        SELECT COUNT(*) FROM FilteredUsers;
+        SELECT COUNT(*)
+        FROM ""Users""
+        WHERE 
+            (@Status = 'All') OR
+            (@Status = 'Active' AND ""IsActive"" = TRUE AND ""IsDeleted"" = FALSE) OR
+            (@Status = 'Inactive' AND ""IsActive"" = FALSE AND ""IsDeleted"" = FALSE) OR
+            (@Status = 'Deleted' AND ""IsDeleted"" = TRUE);
     ";
 
     public GetUsersListHandler(IDbConnection db) => _db = db;
