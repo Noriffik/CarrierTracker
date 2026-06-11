@@ -1,7 +1,9 @@
 ﻿namespace CareerTracker.Identity.Dtos;
 
-public record UserProfileDto(int Id, string Email,
+public record UserListItemDto(int Id,
+    string Email,
     string Role,
     bool IsActive,
+    bool IsDeleted,
     DateTime CreatedAt
 );

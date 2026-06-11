@@ -1,4 +1,5 @@
 ﻿using CareerTracker.Identity.Domain;
+using CareerTracker.Identity.Dtos;
 using CareerTracker.Kernel;
 using Dapper;
 using MediatR;

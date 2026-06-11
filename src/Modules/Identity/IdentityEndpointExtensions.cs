@@ -5,6 +5,7 @@ using CareerTracker.Identity.Features.ChangeUserRole;
 using CareerTracker.Identity.Features.DeactivateUser;
 using CareerTracker.Identity.Features.Delete;
 using CareerTracker.Identity.Features.GetFullProfile;
+using CareerTracker.Identity.Features.GetUserList;
 using CareerTracker.Identity.Features.GetUserProfile;
 using CareerTracker.Identity.Features.Login;
 using CareerTracker.Identity.Features.RegisterUser;
@@ -72,6 +73,7 @@ public static class IdentityEndpointExtensions
         RequestPasswordResetEndpoint.MapEndpoint(group);
         ResetPasswordEndpoint.MapEndpoint(group);
         GetUserProfileEndpoint.MapEndpoint(group);
+        GetUsersListEndpoint.MapEndpoint(group);
         GetFullProfileEndpoint.MapEndpoint(group);
         UpdateUserProfileEndpoint.MapEndpoint(group);
         ChangeUserRoleEndpoint.MapEndpoint(group);

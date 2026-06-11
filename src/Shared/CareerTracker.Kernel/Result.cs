@@ -32,3 +32,5 @@ public sealed class Result
     public static Result Success() => new(true, null);
     public static Result Failure(string error) => new(false, error);
 }
+
+public sealed record PagedResult<T>(IEnumerable<T>? Items, int TotalCount);
