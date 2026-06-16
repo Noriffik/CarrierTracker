@@ -4,7 +4,6 @@ using CareerTracker.App.Views;
 using CommunityToolkit.Maui;
 using HorusStudio.Maui.MaterialDesignControls;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Controls.Compatibility.Hosting;
 
 namespace CareerTracker.App;
 
@@ -15,7 +14,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseMauiCompatibility()
             .UseMauiCommunityToolkit()
             .UseMaterialDesignControls(options =>
             {
@@ -39,7 +37,8 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
         builder.Services
-                .AutoConfigureViewModelsAndPages();
+                .AutoConfigureViewModelsAndPages()
+                .RegisterServices();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
@@ -87,18 +86,7 @@ public static class MauiProgram
     }
 
     static IServiceCollection RegisterServices(this IServiceCollection services)
-    {
-#if IOS
-            services.AddSingleton<IAnalyticsService, HorusStudio.Maui.MaterialDesignControls.Sample.iOS.Services.AnalyticsService>();
-            services.AddSingleton<ICrashlyticsService, HorusStudio.Maui.MaterialDesignControls.Sample.iOS.Services.CrashlyticsService>();
-#elif ANDROID
-        services.AddSingleton<IAnalyticsService, Platforms.Android.Services.AnalyticsService>();
-        services.AddSingleton<ICrashlyticsService, Platforms.Android.Services.CrashlyticsService>();
-#elif MACCATALYST
-            services.AddSingleton<IAnalyticsService, HorusStudio.Maui.MaterialDesignControls.Sample.MacCatalyst.Services.AnalyticsService>();
-            services.AddSingleton<ICrashlyticsService, HorusStudio.Maui.MaterialDesignControls.Sample.MacCatalyst.Services.CrashlyticsService>();
-#endif
-
+    {        
         return services;
     }
 }

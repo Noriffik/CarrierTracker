@@ -31,7 +31,7 @@
 	
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="'$(TargetFramework)' == '$(NetVersion)-android'">
@@ -68,27 +68,11 @@
 		<PackageReference Include="Microsoft.Maui.Core" Version="8.0.100" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == '$(NetVersion)-ios'">
-		<PackageReference Include="HorusStudio.Maui.MaterialDesignControls">
-			<Version>1.1.0</Version>
-		</PackageReference>
-		<PackageReference Include="AdamE.Firebase.iOS.Analytics" />
-		<PackageReference Include="AdamE.Firebase.iOS.Crashlytics" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == '$(NetVersion)-android'">
-		<PackageReference Include="HorusStudio.Maui.MaterialDesignControls">
-	    <Version>1.1.0</Version>
-	  </PackageReference>
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Ktx" />
-		<PackageReference Include="Xamarin.Firebase.Analytics" />
-		<PackageReference Include="Xamarin.Firebase.Crashlytics" />
-	</ItemGroup>
-
 	<ItemGroup>
 	  <Folder Include="Controls\" />
 	  <Folder Include="Converters\" />
 	  <Folder Include="Models\" />
+	  <Folder Include="Platforms\Android\Services\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -98,12 +82,27 @@
 	  <MauiXaml Update="Views\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\RegistrationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+		<PackageReference Include="HorusStudio.Maui.MaterialDesignControls">
+			<Version>1.1.0</Version>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-ios'">
+		<PackageReference Include="HorusStudio.Maui.MaterialDesignControls">
+			<Version>1.1.0</Version>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">
-	  <PackageReference Include="HorusStudio.Maui.MaterialDesignControls">
-	    <Version>1.1.0</Version>
-	  </PackageReference>
+		<PackageReference Include="HorusStudio.Maui.MaterialDesignControls">
+			<Version>1.1.0</Version>
+		</PackageReference>
 	</ItemGroup>
 
 </Project>
