@@ -16,7 +16,6 @@ using CareerTracker.Identity.Features.UpdateUserProfile;
 using CareerTracker.Identity.Infrastructure;
 using CareerTracker.Kernel.Common;
 using CareerTracker.Kernel.Services;
-using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -26,7 +25,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using System.Data;
-using System.Reflection;
 
 namespace CareerTracker.Identity;
 
@@ -51,6 +49,7 @@ public static class IdentityEndpointExtensions
         services.AddDbContext<UserDbContext>(options =>
             options.UseNpgsql(connectionString, npgsql =>
                 npgsql.MigrationsAssembly(typeof(UserDbContext).Assembly.FullName)));
+
         return services;
     }
 

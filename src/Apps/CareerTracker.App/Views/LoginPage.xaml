@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage
+    x:Class="CareerTracker.App.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+    xmlns:pages="clr-namespace:CareerTracker.App.Views"
+    xmlns:vm="clr-namespace:CareerTracker.App.ViewModels"
+    Title="LoginPage"
+    x:DataType="{x:Type vm:LoginViewModel}"
+    x:TypeArguments="vm:LoginViewModel">
+    <VerticalStackLayout>
+        <material:MaterialLabel
+            HorizontalOptions="Center"
+            Text="Welcome to .NET MAUI!"
+            VerticalOptions="Center" />
+    </VerticalStackLayout>
+</pages:BasePage>

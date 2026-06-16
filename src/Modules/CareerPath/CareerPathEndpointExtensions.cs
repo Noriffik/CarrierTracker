@@ -1,44 +1,32 @@
 ﻿using CareerTracker.CareerPath.Data;
-using CareerTracker.CareerPath.Features.CompleteLesson;
+using CareerTracker.CareerPath.Features.CreateGoal;
+using CareerTracker.CareerPath.Features.GetGoals;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
-using System.Data;
 
 namespace CareerTracker.CareerPath;
 
 public static class CareerPathEndpointExtensions
 {
-
-    public static IServiceCollection AddCareerPathModule(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddCareerPathModule(this IServiceCollection services, IConfiguration config)
     {
-        var connectionString = configuration.GetConnectionString("Default");
+        var connectionString = config.GetConnectionString("Default");
 
-        // Регистрация Dapper connection
-        services.AddScoped<IDbConnection>(sp =>
-        {
-            var config = sp.GetRequiredService<IConfiguration>();
-            return new NpgsqlConnection(config.GetConnectionString("Default"));
-        });
-        services.AddDbContext<CareerPathDbContext>(options =>
-            options.UseNpgsql(connectionString, npgsql =>
+        services.AddDbContext<CareerPathDbContext>(opt =>
+            opt.UseNpgsql(connectionString, npgsql =>
                 npgsql.MigrationsAssembly(typeof(CareerPathDbContext).Assembly.FullName)));
+
         return services;
     }
 
     public static void MapCareerPathEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/careerpath")
-                       .WithTags("CareerPath");
-
-        // Регистрация эндпоинтов из слайсов
-        CompleteLessonEndpoint.MapEndpoint(group);
-        //RegisterUser.Endpoint.MapEndpoint(group);
-        //Login.Endpoint.MapEndpoint(group);
-        //GetProfile.Endpoint.MapEndpoint(group);
+        var group = app.MapGroup("/api/career-path").WithTags("CareerPath");
+        CreateGoalEndpoint.MapEndpoint(group);
+        GetGoalsEndpoint.MapEndpoint(group);
     }
 }

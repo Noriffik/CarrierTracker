@@ -30,7 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Modules\CareerPath\CareerTracker.CareerPath.csproj" />
     <ProjectReference Include="..\..\src\Modules\Identity\CareerTracker.Identity.csproj" />
+    <ProjectReference Include="..\..\src\Modules\JobAggregator\CareerTracker.JobAggregator.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Mentorship\CareerTracker.Mentorship.csproj" />
   </ItemGroup>
 
   <ItemGroup>

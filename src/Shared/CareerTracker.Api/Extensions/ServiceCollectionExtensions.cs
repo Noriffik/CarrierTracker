@@ -35,8 +35,7 @@ public static class ServiceCollectionExtensions
                 RoleClaimType = ClaimTypes.Role,
                 NameClaimType = JwtRegisteredClaimNames.Sub
             };
-
-            // Опционально: логирование ошибок валидации токена (помогает при отладке 401)
+                        
             options.Events = new JwtBearerEvents
             {
                 OnAuthenticationFailed = context =>
@@ -49,7 +48,7 @@ public static class ServiceCollectionExtensions
                 }
             };
         });
-        // Инфраструктура (БД, Redis, RabbitMQ, Logging)
+        // Инфраструктура
         services.AddInfrastructure(configuration);
 
         services.AddCareerTrackerModules(configuration);

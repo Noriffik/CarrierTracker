@@ -1,12 +1,13 @@
-﻿namespace CareerTracker.App
-{
-    public partial class App : Application
-    {
-        public App()
-        {
-            InitializeComponent();
+﻿using HorusStudio.Maui.MaterialDesignControls;
+namespace CareerTracker.App;
 
-            MainPage = new AppShell();
-        }
+public partial class App : Application
+{
+    public App()
+    {
+        InitializeComponent();
+        MaterialDesignControls.InitializeComponents();
+
+        MainPage = new AppShell();
     }
 }

@@ -1,7 +1,4 @@
 ﻿using CareerTracker.Api.Extensions;
-using CareerTracker.Identity.Data;
-using CareerTracker.Identity.Domain;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -10,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Настройка Serilog
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+    .MinimumLevel.Error()
+    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)    
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -23,11 +21,11 @@ builder.Services.AddSwaggerGen();
 
 var dbContextTypes = builder.Services
     .Where(descriptor =>
-        typeof(DbContext).IsAssignableFrom(descriptor.ServiceType) && // Является ли тип DbContext или его наследником
-        descriptor.ServiceType.IsClass &&                             // Это класс (не интерфейс)
-        !descriptor.ServiceType.IsAbstract)                           // Не абстрактный класс
+        typeof(DbContext).IsAssignableFrom(descriptor.ServiceType) 
+        && descriptor.ServiceType.IsClass 
+        && !descriptor.ServiceType.IsAbstract)
     .Select(descriptor => descriptor.ServiceType)
-    .Distinct()                                                       // Убираем дубликаты, если тип зарегистрирован несколько раз
+    .Distinct()
     .ToList();
 
 var app = builder.Build();
@@ -47,17 +45,10 @@ if (app.Environment.IsDevelopment() || builder.Configuration.GetValue<bool>("App
         {
             // 1. Генерируем НАСТОЯЩИЙ, валидный хэш для пароля "Admin123!"
             var realHash = hasher.HashPassword(admin, "Admin123!");
-
-            Console.WriteLine("==================================================");
-            Console.WriteLine($"✅ НАСТОЯЩИЙ ХЭШ для пароля 'Admin123!':");
-            Console.WriteLine(realHash);
-            Console.WriteLine("==================================================");
-
-            // 2. Обновляем запись в БД, чтобы исправить ошибку FormatException
             admin.SetPasswordHash(realHash);
             await context.SaveChangesAsync();
 
-            Console.WriteLine("✅ База данных успешно обновлена реальным хэшем!");
+            Console.WriteLine("");
         }
     }*/
 }
@@ -65,3 +56,5 @@ if (app.Environment.IsDevelopment() || builder.Configuration.GetValue<bool>("App
 // 2. Настраиваем Middleware Pipeline
 app.ConfigurePipeline();
 await app.RunAsync();
+
+public partial class Program { }
