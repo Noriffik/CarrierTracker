@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Java.Lang;
 using Microsoft.Extensions.Logging;
 
 namespace CareerTracker.App.ViewModels;
@@ -23,6 +22,19 @@ public partial class LoginViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoginAsync()
     {
-        
+        if (IsLoading) return;
+
+        IsLoading = true;
+        try
+        {
+            await Task.CompletedTask;
+        }
+        catch(Exception ex) {
+            Logger.LogError("Ошибка авторизации", ex);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 }

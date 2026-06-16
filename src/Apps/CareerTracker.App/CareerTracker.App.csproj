@@ -71,8 +71,11 @@
 	<ItemGroup>
 	  <Folder Include="Controls\" />
 	  <Folder Include="Converters\" />
-	  <Folder Include="Models\" />
 	  <Folder Include="Platforms\Android\Services\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CareerTracker.Core\CareerTracker.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
