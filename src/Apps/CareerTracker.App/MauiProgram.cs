@@ -1,5 +1,7 @@
-﻿using CareerTracker.App.ViewModels;
+﻿using CareerTracker.App.Services;
+using CareerTracker.App.ViewModels;
 using CareerTracker.App.Views;
+using CommunityToolkit.Maui;
 using HorusStudio.Maui.MaterialDesignControls;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
@@ -13,6 +15,8 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCompatibility()
+            .UseMauiCommunityToolkit()
             .UseMaterialDesignControls(options =>
             {
                 options.EnableDebug();
@@ -28,7 +32,7 @@ public static class MauiProgram
                     fonts.AddFont("Roboto-Bold.ttf", "RobotoBold");
                 }, new("RobotoRegular", "RobotoMedium", "RobotoRegular"));
             })
-            .UseMauiCompatibility()
+            
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -80,5 +84,21 @@ public static class MauiProgram
             viewModelTypes.Any(vm => t.BaseType.FullName.Contains(vm.FullName)));
 
         return pages;
+    }
+
+    static IServiceCollection RegisterServices(this IServiceCollection services)
+    {
+#if IOS
+            services.AddSingleton<IAnalyticsService, HorusStudio.Maui.MaterialDesignControls.Sample.iOS.Services.AnalyticsService>();
+            services.AddSingleton<ICrashlyticsService, HorusStudio.Maui.MaterialDesignControls.Sample.iOS.Services.CrashlyticsService>();
+#elif ANDROID
+        services.AddSingleton<IAnalyticsService, Platforms.Android.Services.AnalyticsService>();
+        services.AddSingleton<ICrashlyticsService, Platforms.Android.Services.CrashlyticsService>();
+#elif MACCATALYST
+            services.AddSingleton<IAnalyticsService, HorusStudio.Maui.MaterialDesignControls.Sample.MacCatalyst.Services.AnalyticsService>();
+            services.AddSingleton<ICrashlyticsService, HorusStudio.Maui.MaterialDesignControls.Sample.MacCatalyst.Services.CrashlyticsService>();
+#endif
+
+        return services;
     }
 }

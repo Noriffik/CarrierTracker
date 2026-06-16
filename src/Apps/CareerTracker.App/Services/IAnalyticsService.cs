@@ -1,0 +1,6 @@
+﻿namespace CareerTracker.App.Services;
+
+public interface IAnalyticsService
+{
+    void LogEvent(string name, Dictionary<string, string> parameters = null);
+}
