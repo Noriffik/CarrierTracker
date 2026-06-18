@@ -15,9 +15,15 @@ public class GetGoalsHandler : IRequestHandler<GetGoalsQuery, Result<List<GoalDt
         var goals = await _context.Goals
             .Where(g => g.UserId == request.UserId && g.Status != Domain.GoalStatus.Archived)
             .OrderByDescending(g => g.CreatedAt)
-            .Select(g => new GoalDto(g.Id, g.Title, g.Status.ToString(), g.Deadline))
             .ToListAsync(cancellationToken);
 
-        return Result<List<GoalDto>>.Success(goals);
+        var dtos = goals.Select(g => new GoalDto(
+            g.Id,
+            g.Title,
+            g.Status.ToString(),
+            g.Deadline
+        )).ToList();
+
+        return Result<List<GoalDto>>.Success(dtos);
     }
 }

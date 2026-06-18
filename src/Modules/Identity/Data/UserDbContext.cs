@@ -1,5 +1,6 @@
 ﻿using CareerTracker.Identity.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace CareerTracker.Identity.Data;
 
@@ -34,8 +35,11 @@ public sealed class UserDbContext : DbContext
 
             // Храним Attributes как JSONB
             b.Property(p => p.Attributes)
-                .HasColumnType("jsonb")
-                .HasDefaultValueSql("'{}'::jsonb");
+             .HasConversion(
+                 v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null!),
+                 v => JsonSerializer.Deserialize<Dictionary<string, object>>(v, (JsonSerializerOptions)null!) ?? new Dictionary<string, object>()
+             )
+             .HasColumnType("TEXT");
 
             b.Property(p => p.FirstName).HasMaxLength(100).IsRequired();
             b.Property(p => p.LastName).HasMaxLength(100).IsRequired();

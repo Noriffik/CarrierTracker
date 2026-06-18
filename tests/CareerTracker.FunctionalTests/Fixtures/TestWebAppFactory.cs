@@ -88,8 +88,7 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
 
         foreach (var context in contexts)
         {
-            context.Database.EnsureCreated(); // Для SQLite EnsureCreated быстрее и проще чем Migrate
-            // Если нужны именно миграции, используйте: await context.Database.MigrateAsync();
+            context.Database.EnsureCreated();
         }
     }
 

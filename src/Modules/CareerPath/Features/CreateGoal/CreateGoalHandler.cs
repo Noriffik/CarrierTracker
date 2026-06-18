@@ -14,8 +14,15 @@ public class CreateGoalHandler : IRequestHandler<CreateGoalCommand, Result<int>>
     public async Task<Result<int>> Handle(CreateGoalCommand request, CancellationToken cancellationToken)
     {
         var goal = CareerGoal.Create(request.UserId, request.Title, request.Description, request.Deadline);
-        _context.Goals.Add(goal);
-        await _context.SaveChangesAsync(cancellationToken);
-        return Result<int>.Success(goal.Id);
+        try
+        {
+            _context.Goals.Add(goal);
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result<int>.Success(goal.Id);
+        }
+        catch (Exception ex)
+        {
+            return Result<int>.Failure(ex.Message);
+        }
     }
 }

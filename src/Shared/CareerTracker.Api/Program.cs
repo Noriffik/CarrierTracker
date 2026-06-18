@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Настройка Serilog
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .MinimumLevel.Error()
+    .MinimumLevel.Information()
     .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)    
     .CreateLogger();
 

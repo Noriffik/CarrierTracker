@@ -1,6 +1,7 @@
 ﻿using CareerTracker.Identity.Domain;
 using CareerTracker.Identity.Features.RegisterUser;
 using FluentValidation.TestHelper;
+using Microsoft.IdentityModel.Tokens.Experimental;
 using Xunit;
 
 namespace CareerTracker.UnitTests.Identity.Features;
@@ -18,33 +19,35 @@ public class RegisterUserValidatorTests
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    // Правильный подход: отдельный тест для каждого типа ошибки
-    [Theory]
-    [InlineData("invalid-email", "StrongPass1!", UserRole.Graduate, "Email")]
-    [InlineData("user@test.com", "short", UserRole.Graduate, "Password")]
-    [InlineData("user@test.com", "StrongPass1!", UserRole.Admin, "Role")]
-    public void Validate_InvalidCommand_HasExpectedError(
-        string email,
-        string password,
-        UserRole role,
-        string expectedPropertyName)
+    [Fact]
+    public void Validate_InvalidEmail_HasError()
     {
-        var command = new RegisterUserCommand(email, password, role);
+        var command = new RegisterUserCommand("invalid-email", "StrongPass1!", UserRole.Graduate);
         var result = _validator.TestValidate(command);
 
-        // Проверяем наличие ошибки у конкретного свойства
-        result.ShouldHaveValidationErrorFor(GetPropertyExpression(expectedPropertyName));
+        result.ShouldHaveValidationErrorFor(x => x.Email);
     }
 
-    // Вспомогательный метод для получения Expression по имени свойства
-    private static System.Linq.Expressions.Expression<Func<RegisterUserCommand, object?>> GetPropertyExpression(string propertyName)
+    [Fact]
+    public void Validate_ShortPassword_HasError()
     {
-        return propertyName switch
-        {
-            "Email" => x => x.Email,
-            "Password" => x => x.Password,
-            "Role" => x => x.Role,
-            _ => throw new ArgumentException($"Unknown property: {propertyName}")
-        };
+        var command = new RegisterUserCommand("user@test.com", "short", UserRole.Graduate);
+        var result = _validator.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(x => x.Password);
+    }
+
+    [Fact]
+    public void Validate_AdminRole_HasError()
+    {
+        var command = new RegisterUserCommand("user@test.com", "StrongPass1!", UserRole.Admin);
+        var result = _validator.TestValidate(command);
+
+        // Проверяем, что ошибка есть именно у свойства Role
+        result.ShouldHaveValidationErrorFor(x => x.Role);
+
+        // Опционально: проверяем текст ошибки
+        result.ShouldHaveValidationErrorFor(x => x.Role)
+              .WithErrorMessage("Самостоятельная регистрация админом запрещена");
     }
 }
