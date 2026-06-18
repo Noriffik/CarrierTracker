@@ -27,7 +27,6 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
 
     static TestWebAppFactory()
     {
-        // Открываем соединение один раз при старте класса
         _sharedConnection.Open();
     }
 
@@ -55,11 +54,9 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
             services.AddDbContext<CareerPathDbContext>(options =>
                 options.UseSqlite(_sharedConnection));
 
-            // 3. Подменяем внешние сервисы на заглушки
             services.RemoveAll(typeof(IEmailSender));
             services.AddSingleton<IEmailSender>(new CaptureEmailSender(CapturedEmails));
 
-            // 4. Отключаем лишнее логирование в консоль во время тестов
             services.AddSingleton<ILoggerFactory>(new NullLoggerFactory());
         });
     }
@@ -68,7 +65,6 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
     {
         base.ConfigureClient(client);
 
-        // Инициализируем БД при первом запуске
         if (!_isDatabaseInitialized)
         {
             lock (_lock)
@@ -82,39 +78,15 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
         }
     }
 
-    /*private void InitializeDatabase()
-    {
-        using var scope = Services.CreateScope();
-        var serviceProvider = scope.ServiceProvider;
-
-        var userContext = serviceProvider.GetRequiredService<UserDbContext>();
-        var careerContext = serviceProvider.GetRequiredService<CareerPathDbContext>();
-
-        try
-        {
-            // Создаем схемы для обоих контекстов на одном соединении
-            userContext.Database.EnsureCreated();
-            careerContext.Database.EnsureCreated();
-            var tables = careerContext.Model.GetEntityTypes().Select(e => e.GetTableName()).ToList();
-            Console.WriteLine($"✅ Created tables for CareerPath: {string.Join(", ", tables)}");
-        }
-        catch (Exception ex)
-        {
-            throw new InvalidOperationException($"Failed to initialize database: {ex.Message}", ex);
-        }        
-    }*/
-
     private void InitializeDatabase()
     {
         using var scope = Services.CreateScope();
         var serviceProvider = scope.ServiceProvider;
 
-        // Получаем соединение напрямую
         var connection = serviceProvider.GetRequiredService<UserDbContext>().Database.GetDbConnection();
 
         using var cmd = connection.CreateCommand();
 
-        // 1. Создаем таблицу Users (Identity)
         cmd.CommandText = @"
         CREATE TABLE IF NOT EXISTS ""Users"" (
             ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_Users"" PRIMARY KEY AUTOINCREMENT,
@@ -130,7 +102,6 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
     ";
         cmd.ExecuteNonQuery();
 
-        // 2. Создаем таблицу UserProfiles (Identity)
         cmd.CommandText = @"
         CREATE TABLE IF NOT EXISTS ""UserProfiles"" (
             ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_UserProfiles"" PRIMARY KEY AUTOINCREMENT,
@@ -147,7 +118,6 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
     ";
         cmd.ExecuteNonQuery();
 
-        // 3. Создаем таблицу PasswordResetRequests (Identity)
         cmd.CommandText = @"
         CREATE TABLE IF NOT EXISTS ""PasswordResetRequests"" (
             ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_PasswordResetRequests"" PRIMARY KEY AUTOINCREMENT,
@@ -160,8 +130,7 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
         );
     ";
         cmd.ExecuteNonQuery();
-
-        // 4. ✅ Создаем таблицу CareerGoals (CareerPath)
+     
         cmd.CommandText = @"
         CREATE TABLE IF NOT EXISTS ""CareerGoals"" (
             ""Id"" INTEGER NOT NULL CONSTRAINT ""PK_CareerGoals"" PRIMARY KEY AUTOINCREMENT,
