@@ -11,6 +11,8 @@ public class CareerPathDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<CareerGoal>(b =>
         {
             b.HasKey(g => g.Id);

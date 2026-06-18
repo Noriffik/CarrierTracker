@@ -6,7 +6,7 @@ public sealed class CareerGoal
 
     public int Id { get; private set; }
     public int UserId { get; private set; }
-    public string Title { get; private set; } = null!;
+    public string Title { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
     public GoalStatus Status { get; private set; }
     public DateTime? Deadline { get; private set; }
